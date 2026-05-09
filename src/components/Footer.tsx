@@ -3,7 +3,7 @@ import { FaFacebook, FaInstagram, FaYoutube, FaTwitter, FaCcVisa, FaCcMastercard
 export function Footer() {
   return (
     <footer className="mt-16 border-t border-border bg-card">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
+      <div className="mx-auto grid w-[90%] gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
             <div className="grid h-9 w-9 place-items-center rounded-lg gradient-sunset font-black text-warm-foreground">B</div>

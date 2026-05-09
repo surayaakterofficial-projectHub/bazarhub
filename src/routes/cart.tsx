@@ -24,7 +24,7 @@ function CartPage() {
 
   const shipping = total > 999 ? 0 : 60;
   return (
-    <div className="mx-auto max-w-7xl px-3 py-5 sm:px-4">
+    <div className="mx-auto w-[90%]  px-3 py-5 sm:px-4">
       <h1 className="mb-4 text-2xl font-bold">Shopping Cart ({items.length})</h1>
       <div className="grid gap-5 lg:grid-cols-[1fr_340px]">
         <div className="rounded-xl border border-border bg-card p-2 sm:p-4">

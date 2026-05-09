@@ -4,6 +4,8 @@ import { Footer } from "@/components/Footer";
 import { CartProvider, CommentsProvider, ThemeProvider, WishlistProvider } from "@/lib/store";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
+import AuthProvider from "../provider/AuthProvider";
+
 
 function NotFoundComponent() {
   return (
@@ -25,7 +27,7 @@ export const Route = createRootRoute({
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
-  shellComponent: RootShell,
+
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
 });
@@ -43,8 +45,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return (
-    <ThemeProvider>
+  return ( <AuthProvider>
+<ThemeProvider>
       <CartProvider>
         <WishlistProvider>
           <CommentsProvider>
@@ -58,5 +60,7 @@ function RootComponent() {
         </WishlistProvider>
       </CartProvider>
     </ThemeProvider>
+  </AuthProvider>
+    
   );
 }

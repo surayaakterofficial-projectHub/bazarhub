@@ -7,7 +7,22 @@ import { toast } from "sonner";
 
 export function Comments({ productId }: { productId: string }) {
   const { forProduct, add, remove, currentUser, isAdmin, isLoggedIn } = useComments();
-  const list = useMemo(() => forProduct(productId), [forProduct, productId]);
+ 
+
+const list = useMemo(() => {
+
+  if (typeof forProduct !== "function") {
+
+    return [];
+
+  }
+
+  return forProduct(productId);
+
+}, [forProduct, productId]);
+
+
+
   const [text, setText] = useState("");
   const [rating, setRating] = useState(5);
   const navigate = useNavigate();

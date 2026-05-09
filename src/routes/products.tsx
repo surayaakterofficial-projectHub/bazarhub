@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState,useEffect } from "react";
 import { z } from "zod";
 import { FaFilter } from "react-icons/fa";
-import { categories, products } from "@/data/products";
+import { categories } from "@/data/products";
 import { ProductCard } from "@/components/ProductCard";
+import axios from "axios";
 
 const searchSchema = z.object({
   cat: z.string().optional().default("all"),
@@ -19,24 +20,69 @@ function ProductsPage() {
   const { cat, q } = Route.useSearch();
   const [sort, setSort] = useState("popular");
   const [maxPrice, setMaxPrice] = useState(100000);
+const [products, setProducts] = useState([]);
+ const filtered = useMemo(() => {
 
-  const filtered = useMemo(() => {
-    let list = products.filter(p =>
-      (cat === "all" || p.category === cat) &&
-      (!q || p.name.toLowerCase().includes(q.toLowerCase()) || p.brand.toLowerCase().includes(q.toLowerCase())) &&
-      p.price <= maxPrice
-    );
-    if (sort === "low") list = [...list].sort((a, b) => a.price - b.price);
-    else if (sort === "high") list = [...list].sort((a, b) => b.price - a.price);
-    else if (sort === "rating") list = [...list].sort((a, b) => b.rating - a.rating);
-    else list = [...list].sort((a, b) => b.sold - a.sold);
-    return list;
-  }, [cat, q, sort, maxPrice]);
+  let list = products.filter(p =>
+
+    (cat === "all" ||p.category.toLowerCase() === cat.toLowerCase()) &&
+
+    (!q ||
+      p.name.toLowerCase()
+      .includes(q.toLowerCase())) &&
+
+    p.price <= maxPrice
+
+  );
+
+  if (sort === "low") {
+
+    list = [...list]
+      .sort((a, b) => a.price - b.price);
+
+  }
+
+  else if (sort === "high") {
+
+    list = [...list]
+      .sort((a, b) => b.price - a.price);
+
+  }
+
+  else if (sort === "rating") {
+
+    list = [...list]
+      .sort((a, b) => b.rating - a.rating);
+
+  }
+
+  else {
+
+    list = [...list]
+      .sort((a, b) => b.sold - a.sold);
+
+  }
+
+  return list;
+
+}, [products, cat, q, sort, maxPrice]);
 
   const current = categories.find(c => c.id === cat) || categories[0];
+useEffect(() => {
 
+  axios
+    .get("http://localhost:5000/products")
+
+    .then(res => {
+
+      setProducts(res.data);
+
+    });
+
+}, []);
   return (
-    <div className="mx-auto max-w-7xl px-3 py-5 sm:px-4">
+    <div className="mx-auto w-[90%]
+     px-3 py-5 sm:px-4">
       <nav className="mb-3 text-xs text-muted-foreground">
         <Link to="/" className="hover:text-primary">Home</Link> / <span className="text-foreground">{current.name}</span>
         {q && <span> / Search: "{q}"</span>}
@@ -80,7 +126,10 @@ function ProductsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5">
-              {filtered.map(p => <ProductCard key={p.id} p={p} />)}
+              {filtered.map(p =><ProductCard
+  key={p._id}
+  product={p}
+/>)}
             </div>
           )}
         </div>

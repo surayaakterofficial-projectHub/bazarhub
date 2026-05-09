@@ -6,12 +6,13 @@ import {
 } from "react-icons/fa";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
+import axios from "axios";
 
 export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
 });
 
-type Pay = "cod" | "bkash" | "nagad" | "rocket" | "card" | "bank";
+/* type Pay = "cod" | "bkash" | "nagad" | "rocket" | "card" | "bank"; 
 
 const payments: { id: Pay; name: string; icon: React.ReactNode; note: string }[] = [
   { id: "cod", name: "Cash on Delivery", icon: <FaMoneyBillWave />, note: "Pay when you receive" },
@@ -21,11 +22,11 @@ const payments: { id: Pay; name: string; icon: React.ReactNode; note: string }[]
   { id: "card", name: "Credit / Debit Card", icon: <FaCreditCard />, note: "Visa, Mastercard, Amex" },
   { id: "bank", name: "Bank Transfer", icon: <FaUniversity />, note: "Direct bank deposit" },
 ];
-
+  */
 function CheckoutPage() {
   const { items, total, clear } = useCart();
   const nav = useNavigate();
-  const [pay, setPay] = useState<Pay>("cod");
+  /* const [pay, setPay] = useState<Pay>("cod"); */
   const [form, setForm] = useState({
     name: "", phone: "", email: "", address: "", city: "Dhaka", area: "", zip: "", notes: "",
     cardNo: "", cardName: "", expiry: "", cvv: "", mobileNo: "",
@@ -43,23 +44,67 @@ function CheckoutPage() {
     );
   }
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.name || !form.phone || !form.address) {
-      return toast.error("Please fill required fields");
-    }
-    toast.success("Order placed successfully! 🎉", { description: `Order total ৳${grand} • ${payments.find(p => p.id === pay)?.name}` });
-    clear();
-    setTimeout(() => nav({ to: "/" }), 1200);
-  };
+const submit = async (
+  e: React.FormEvent
+) => {
+
+  e.preventDefault();
+
+  if (
+    !form.name ||
+    !form.phone ||
+    !form.address
+  ) {
+
+    return toast.error(
+      "Please fill required fields"
+    );
+  }
+
+  try {
+
+    const res = await axios.post(
+
+      "http://localhost:5000/payment",
+
+      {
+
+        totalAmount: grand,
+
+        email: form.email ||
+
+          "test@gmail.com",
+
+      }
+
+    );
+console.log(res.data);
+
+    window.location.replace(
+      res.data.url
+    );
+
+  }
+
+  catch (error) {
+
+    console.log(error);
+
+    toast.error(
+      "Payment Failed"
+    );
+  }
+};
+
 
   return (
-    <div className="mx-auto max-w-7xl px-3 py-5 sm:px-4">
+    <div className="mx-auto w-[90%] px-3 py-5 sm:px-4">
       <h1 className="mb-4 text-2xl font-bold">Checkout</h1>
       <form onSubmit={submit} className="grid gap-5 lg:grid-cols-[1fr_360px]">
         <div className="space-y-5">
+
           {/* Contact */}
-          <Section title="Contact Information" icon={<FaUser />}>
+       <Section title="Contact Information" icon={<FaUser />}>
             <div className="grid gap-3 sm:grid-cols-2">
               <Field icon={<FaUser />} placeholder="Full name *" value={form.name} onChange={(v) => set("name", v)} required />
               <Field icon={<FaPhone />} placeholder="Phone number *" value={form.phone} onChange={(v) => set("phone", v)} required type="tel" />
@@ -68,7 +113,7 @@ function CheckoutPage() {
               </div>
             </div>
           </Section>
-
+ 
           {/* Shipping */}
           <Section title="Shipping Address" icon={<FaTruck />}>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -85,7 +130,7 @@ function CheckoutPage() {
           </Section>
 
           {/* Payment */}
-          <Section title="Payment Method" icon={<FaCreditCard />}>
+         {/*  <Section title="Payment Method" icon={<FaCreditCard />}>
             <div className="grid gap-2 sm:grid-cols-2">
               {payments.map(p => (
                 <label key={p.id} className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition ${pay === p.id ? "border-primary bg-primary/5 ring-2 ring-primary/30" : "border-border hover:border-primary/50"}`}>
@@ -120,7 +165,7 @@ function CheckoutPage() {
                 Transfer to: <strong>BazaarHub Ltd · DBBL · A/C 123-456-789</strong>. Use your phone as reference.
               </div>
             )}
-          </Section>
+          </Section> */}
         </div>
 
         {/* Summary */}
@@ -128,7 +173,7 @@ function CheckoutPage() {
           <h3 className="text-base font-bold">Order Summary</h3>
           <div className="max-h-60 space-y-2 overflow-auto pr-1">
             {items.map(({ product: p, qty }) => (
-              <div key={p.id} className="flex items-center gap-2 text-sm">
+              <div key={p._id} className="flex items-center gap-2 text-sm">
                 <img src={p.image} alt={p.name} className="h-10 w-10 rounded object-cover" />
                 <span className="line-clamp-1 flex-1">{p.name} <span className="text-muted-foreground">×{qty}</span></span>
                 <span className="font-semibold">৳{p.price * qty}</span>
@@ -181,7 +226,24 @@ function Select({ icon, value, onChange, options }: { icon: React.ReactNode; val
     <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 focus-within:border-primary">
       <span className="text-muted-foreground">{icon}</span>
       <select value={value} onChange={(e) => onChange(e.target.value)} className="flex-1 bg-transparent py-2.5 text-sm outline-none">
-        {options.map(o => <option key={o}>{o}</option>)}
+ 
+
+ {options.map((o, index) => (
+
+  <option
+    key={index}
+    value={o}
+  >
+
+    {o}
+
+  </option>
+
+))}
+
+
+
+
       </select>
     </div>
   );
