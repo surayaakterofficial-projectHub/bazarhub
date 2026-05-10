@@ -71,7 +71,7 @@ const [products, setProducts] = useState([]);
 useEffect(() => {
 
   axios
-    .get("http://localhost:5000/products")
+    .get("https://bazarhub.onrender.com/products")
 
     .then(res => {
 

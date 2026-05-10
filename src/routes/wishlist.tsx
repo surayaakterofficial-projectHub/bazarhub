@@ -43,7 +43,7 @@ function WishlistPage() {
 
     axios
       .get(
-        "http://localhost:5000/products"
+        "https://bazarhub.onrender.com/products"
       )
 
       .then((res) => {

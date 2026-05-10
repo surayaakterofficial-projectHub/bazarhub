@@ -28,7 +28,7 @@ function AdminAddProduct() {
   useEffect(() => {
 
     axios
-      .get("http://localhost:5000/products")
+      .get("https://bazarhub.onrender.com/products")
 
       .then((res) => {
 
@@ -80,7 +80,7 @@ function AdminAddProduct() {
         const res =
           await axios.patch(
 
-            `http://localhost:5000/products/${editingId}`,
+        `https://bazarhub.onrender.com/products/${editingId}`,
 
             productData
 
@@ -109,7 +109,7 @@ function AdminAddProduct() {
         const res =
           await axios.post(
 
-            "http://localhost:5000/products",
+            "https://bazarhub.onrender.com/products",
 
             productData
 
@@ -166,7 +166,7 @@ function AdminAddProduct() {
         const res =
           await axios.delete(
 
-            `http://localhost:5000/products/${id}`
+            `https://bazarhub.onrender.com/products/${id}`
 
           );
 

@@ -34,7 +34,7 @@ const [p, setP] = useState(null);
 useEffect(() => {
 
   axios
-    .get(`http://localhost:5000/products/${id}`)
+    .get(`https://bazarhub.onrender.com/products/${id}`)
 
     .then(res => {
 
